@@ -3,8 +3,8 @@ VCS_URL := $(shell git config --get remote.origin.url)
 VCS_REF := $(shell git rev-parse --short HEAD)
 
 ALPINE_VERSION := 3.8
-OPENSSH_VERSION := 7.7
-IMAGE_TAG := $(OPENSSH_VERSION)
+OPENSSH_SERVER_VERSION := 7.7
+IMAGE_TAG := $(OPENSSH_SERVER_VERSION)
 IMAGE_NAME ?= foobox/openssh-server:$(IMAGE_TAG)
 
 all: build
@@ -21,7 +21,7 @@ amd64-build:
 	    --build-arg VCS_REF=$(VCS_REF) \
 	    --build-arg ARCH=amd64 \
 	    --build-arg ALPINE_VERSION=$(ALPINE_VERSION) \
-	    --build-arg APACHE_VERSION=$(APACHE_VERSION) \
+	    --build-arg OPENSSH_SERVER_VERSION=$(OPENSSH_SERVER_VERSION) \
 	    --tag $(IMAGE_NAME)-amd64 .
 
 amd64-push: amd64-build
@@ -35,7 +35,7 @@ arm32v6-build:
 	    --build-arg VCS_REF=$(VCS_REF) \
 	    --build-arg ARCH=arm32v6 \
 	    --build-arg ALPINE_VERSION=$(ALPINE_VERSION) \
-	    --build-arg APACHE_VERSION=$(APACHE_VERSION) \
+	    --build-arg OPENSSH_SERVER_VERSION=$(OPENSSH_SERVER_VERSION) \
 	    --tag $(IMAGE_NAME)-arm32v6 .
 
 arm32v6-push: arm32v6-build
