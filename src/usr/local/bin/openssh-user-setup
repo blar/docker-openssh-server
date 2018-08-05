@@ -1,0 +1,37 @@
+#!/bin/sh
+
+set -e
+
+if [ -d /run/secrets ]; then
+    chmod 755 /run/secrets
+fi
+
+# Create users for public keys.
+for file in $(ls /run/secrets/*.pub); do
+    username=$(basename $file .pub)
+    if ! getent passwd $username > /dev/null; then
+        echo Add user $username
+        adduser -D $username
+        passwd -u $username -d
+    fi
+    chown $username: $file
+done
+
+if [ "$OPENSSH_SERVER_PASSWORD_ALLOW" = "true" ]; then
+    # Create users and concat passwords for import.
+    for file in $(ls /run/secrets/*.password); do
+        username=$(basename $file .password)
+        if ! getent passwd $username > /dev/null; then
+            echo Add user $username
+            adduser -D $username
+            passwd -u $username -d
+        fi
+        echo -n $username:$(cat $file) >> /tmp/passwords
+    done
+
+    # Import passwords.
+    if [ -f /tmp/passwords ]; then
+        chpasswd < /tmp/passwords
+        rm /tmp/passwords
+    fi
+fi

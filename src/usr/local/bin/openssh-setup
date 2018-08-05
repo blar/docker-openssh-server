@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+apk add --no-cache openssh-server=~$OPENSSH_SERVER_VERSION openssh-sftp-server=~$OPENSSH_SERVER_VERSION openssh-client=~$OPENSSH_SERVER_VERSION
+chmod g-w,o-w /etc

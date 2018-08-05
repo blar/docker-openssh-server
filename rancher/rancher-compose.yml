@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+
+    ssh-tunnel:
+        scale: 1
+        start_on_create: true
+        health_check:
+            response_timeout: 2000
+            healthy_threshold: 2
+            port: 22
+            unhealthy_threshold: 3
+            initializing_timeout: 60000
+            interval: 2000
+            strategy: recreate
+            reinitializing_timeout: 60000
+
+catalog:
+    name: OpenSSH-Server
+    version: 7.7
+    description: 'OpenSSH-Server'
+    minimum_rancher_version: 1.6.7
+    questions:
+    -   variable: OPENSSH_SERVER_PUBLIC_PORT
+        label: Public port
+        required: true
+        type: int
+        default: "22"
+
+    -   variable: OPENSSH_SERVER_PASSWORD_ALLOW
+        label: Allow passwort authentication
+        required: true
+        type: boolean
+        default: "false"
+
+        $OPENSSH_SERVER_PASSWORD_ALLOW
+    -   variable: OPENSSH_SERVER_BANNER
+        label: Banner
+        description: MySQL-Database
+        required: false
+        type: Show Message when connecting to the server

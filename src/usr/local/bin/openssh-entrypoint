@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+openssh-host-keys-generate
+openssh-user-setup
+
+if [ -n "$OPENSSH_SERVER_BANNER" ]; then
+    echo $OPENSSH_SERVER_BANNER > /etc/ssh/banner.txt
+    echo "Banner /etc/ssh/banner.txt" >> /etc/ssh/sshd_config
+fi
+
+if [ "$OPENSSH_SERVER_PASSWORD_ALLOW" = "true" ]; then
+    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+fi
+
+if [ "$1" = "/usr/sbin/sshd" ]; then
+    # no detach
+    set -- "$@" "-D"
+
+    # Write logs to /dev/stderr
+    set -- "$@" "-e"
+
+    # Config file
+    set -- "$@" -f "/etc/ssh/sshd_config"
+
+    # Debug
+    # set -- "$@" -d
+fi
+
+exec "$@"

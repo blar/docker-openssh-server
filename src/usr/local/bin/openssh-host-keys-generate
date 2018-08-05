@@ -1,0 +1,19 @@
+#!/bin/sh
+
+ssh-keygen -A
+
+if [ ! -d "/etc/ssh/host_keys" ]; then
+    mkdir /etc/ssh/host_keys
+fi
+
+if [ ! -f "/etc/ssh/host_keys/rsa_key" ]; then
+    ssh-keygen -q -f /etc/ssh/host_keys/rsa_key -N '' -t rsa
+fi
+
+if [ ! -f "/etc/ssh/host_keys/ecdsa_key" ]; then
+    ssh-keygen -q -f /etc/ssh/host_keys/ecdsa_key -N '' -t ecdsa
+fi
+
+if [ ! -f "/etc/ssh/host_keys/ed25519_key" ]; then
+    ssh-keygen -q -f /etc/ssh/host_keys/ed25519_key -N '' -t ed25519
+fi
